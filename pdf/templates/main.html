@@ -1,7 +1,20 @@
-<form method="post">
-{% csrf_token %}
-
-<input type="file" name="document">
-<button type="submit">submit</button>
-</input>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="document"> <!-- Make sure the name attribute matches 'document' -->
+    <button type="submit">Upload</button>
 </form>
+
+<label for="name-dropdown">Select Subject Name:</label>
+<select id="name-dropdown" name="selected_name">
+    {% for name in columns %}
+        <option value="{{ name }}">{{ name }}</option>
+    {% endfor %}
+</select>
+
+
+
+{% for value in data %}
+    {{ value }}
+
+    {% endfor %}
+
