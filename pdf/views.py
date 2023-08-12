@@ -21,11 +21,23 @@ def get_table_data(df,sub_name):
             results.append(value+",")
     return results
 
+def extract_subjects(subject):
+    sub=subject.upper()
+    sub=sub.split()
+    return sub
+
 # Create your views here.
 
 def display(request):
     if request.method == "POST":
+
+        sub_wise_data={}
         uploaded_file = request.FILES['document']
+        subjects=request.POST.get("subject")
+        subjects=extract_subjects(subjects)
+
+        print(f"subjects typed are {subjects}")
+
         file_content = uploaded_file.read()
         doc = Document(io.BytesIO(file_content))
 
@@ -39,10 +51,12 @@ def display(request):
                 table_data.append(row_data)
         df=pd.DataFrame(table_data[1:],columns=table_data[0])
         columns=df.columns
-
-        result=get_table_data(df,"ENG320")
-        
-        return render(request,"main.html",{"data":result,"columns":columns})
+        for sub in subjects:
+            data=get_table_data(df,sub)
+            sub_wise_data[sub]=data
+            results=[]
+            print(sub_wise_data)
+        return render(request,"main.html",{"sub_wise_data":sub_wise_data,"columns":columns})
 
 
 
