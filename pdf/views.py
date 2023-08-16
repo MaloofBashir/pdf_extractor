@@ -10,7 +10,7 @@ from tabulate import tabulate
 
 table_data=[]
 
-#This function will split the column1 or column2(subjects string) subjects into a list of suitable subject name
+#This function will split the column1 or column2(subjects string)  into a list of suitable subject names
 def split_column_subjects(subjects):
     sub_name=subjects.split("-")
     col_name=[ col.replace(" ","") for col in sub_name]
