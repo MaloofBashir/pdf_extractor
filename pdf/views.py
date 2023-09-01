@@ -10,16 +10,17 @@ from tabulate import tabulate
 
 table_data=[]
 
-def get_table_data(df,sub_name,col_name):
+def get_table_data(df,sub_name,col_name,output):
     results=[]
     for index,row in df.iterrows():
         value=row[col_name]
         if index==2:
             exit
         if sub_name in value:
-            value=df.loc[index,"ClassRollNo"]
-            if value.isdigit()!=True:
-                results.append("--")
+            value=df.loc[index,output]
+            if output=="ClassRollNo":
+                if value.isdigit()!=True:
+                    results.append("--")
             
             results.append(value+",")
     return results
@@ -29,11 +30,6 @@ def extract_subjects(subject):
     sub=sub.split()
     return sub
 
-
-
-
-# Create your views here.
-
 def display(request):
     if request.method == "POST":
         try:
@@ -41,7 +37,7 @@ def display(request):
             subjects = request.POST.get("subject")
             col_name=request.POST.get("col_name")
             subjects = extract_subjects(subjects)
-
+            selected_option = request.POST.get('options', None)
             file_content = uploaded_file.read()
             doc = Document(io.BytesIO(file_content))
 
@@ -53,12 +49,12 @@ def display(request):
                         row_data.append(cell.text.strip())
                     table_data.append(row_data)
             df = pd.DataFrame(table_data[1:], columns=table_data[0])
-
+        
 
             sub_wise_data = {}
             columns = df.columns
             for sub in subjects:
-                data = get_table_data(df, sub,col_name)
+                data = get_table_data(df, sub,col_name,selected_option)
                 sub_wise_data[sub] = data
 
             error = ""  # Initialize error message
